@@ -1,10 +1,14 @@
 package com.learnreactiveprogramming.service;
 
+import lombok.var;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.test.scheduler.VirtualTimeScheduler;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 
 class FluxAndMonoGeneratorServiceTest {
@@ -14,34 +18,27 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void namesFlux() {
 
-        //given
+        Flux<String> stringFlux = fluxAndMonoGeneratorService.namesFlux().log();
 
-        //when
-        var stringFlux = fluxAndMonoGeneratorService.namesFlux();
-
-        //then
         StepVerifier.create(stringFlux)
-                //.expectNext("alex", "ben", "chloe")
-                //.expectNextCount(3)
-                .expectNext("alex")
-                .expectNextCount(2)
+                .expectNext("alex", "ben", "chloe")
+                .expectNextCount(0)
+//                .expectNext("alex")
+//                .expectNextCount(2)
                 .verifyComplete();
 
     }
 
     @Test
     void namesFlux_Immutability() {
-
-        //given
-
         //when
-        var stringFlux = fluxAndMonoGeneratorService.namesFlux_immutablity()
+        Flux<String> stringFlux = fluxAndMonoGeneratorService.namesFlux_immutablity()
                 .log();
 
         //then
         StepVerifier.create(stringFlux)
-                //.expectNext("ALEX", "BEN", "CHLOE")
-                .expectNextCount(3)
+                .expectNext("ALEX", "BEN", "CHLOE")
+//                .expectNextCount(3)
                 .verifyComplete();
 
 
@@ -50,11 +47,8 @@ class FluxAndMonoGeneratorServiceTest {
     @Test
     void namesMono() {
 
-        //given
-        //when
-        var stringMono = fluxAndMonoGeneratorService.namesMono();
+        Mono<String> stringMono = fluxAndMonoGeneratorService.namesMono();
 
-        //then
         StepVerifier.create(stringMono)
                 .expectNext("alex")
                 .verifyComplete();
@@ -68,7 +62,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var stringMono = fluxAndMonoGeneratorService.namesMono_map_filter(stringLength);
+        Mono<String> stringMono = fluxAndMonoGeneratorService.namesMono_map_filter(stringLength);
 
         //then
         StepVerifier.create(stringMono)
@@ -84,7 +78,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 4;
 
         //when
-        var stringMono = fluxAndMonoGeneratorService.namesMono_map_filter(stringLength);
+        Mono<String> stringMono = fluxAndMonoGeneratorService.namesMono_map_filter(stringLength);
 
         //then
         StepVerifier.create(stringMono)
@@ -101,7 +95,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_map(stringLength).log();
+        Flux<String> namesFlux = fluxAndMonoGeneratorService.namesFlux_map(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -118,7 +112,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -134,7 +128,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap_async(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_flatmap_async(stringLength);
 
         //then
         StepVerifier.create(namesFlux)
@@ -152,7 +146,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -170,7 +164,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength);
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_concatmap(stringLength);
 
         //then
         StepVerifier.withVirtualTime(()-> namesFlux)
@@ -187,11 +181,13 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesMono_flatmap(stringLength).log();
+        Mono<List<String>>  namesFlux = fluxAndMonoGeneratorService.namesMono_flatmap(stringLength).log();
 
         //then
+        List<String> list1 = Arrays.asList("A", "L", "E", "X");
         StepVerifier.create(namesFlux)
-                .expectNext(List.of("A", "L", "E", "X"))
+//                .expectNext(List.of("A", "L", "E", "X"))
+                .expectNext(list1)
                 .verifyComplete();
 
     }
@@ -203,7 +199,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesMono_flatmapMany(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesMono_flatmapMany(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -220,7 +216,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -237,7 +233,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 6;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_transform(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -254,7 +250,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 6;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_switchIfEmpty(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_switchIfEmpty(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -271,7 +267,7 @@ class FluxAndMonoGeneratorServiceTest {
         int stringLength = 3;
 
         //when
-        var namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_concatwith(stringLength).log();
+        Flux<String>  namesFlux = fluxAndMonoGeneratorService.namesFlux_transform_concatwith(stringLength).log();
 
         //then
         StepVerifier.create(namesFlux)
@@ -287,7 +283,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.name_defaultIfEmpty();
+        Mono<String>  value = fluxAndMonoGeneratorService.name_defaultIfEmpty();
 
         //then
         StepVerifier.create(value)
@@ -302,7 +298,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.name_switchIfEmpty();
+        Mono<String> value = fluxAndMonoGeneratorService.name_switchIfEmpty();
 
         //then
         StepVerifier.create(value)
@@ -317,7 +313,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.explore_concat();
+        Flux<String> value = fluxAndMonoGeneratorService.explore_concat();
 
         //then
         StepVerifier.create(value)
@@ -348,7 +344,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.explore_concatWith_mono();
+        Flux<String> value = fluxAndMonoGeneratorService.explore_concatWith_mono();
 
         //then
         StepVerifier.create(value)
@@ -363,7 +359,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.explore_merge();
+        Flux<String>  value = fluxAndMonoGeneratorService.explore_merge();
 
         //then
         StepVerifier.create(value)
@@ -379,7 +375,7 @@ class FluxAndMonoGeneratorServiceTest {
         //given
 
         //when
-        var value = fluxAndMonoGeneratorService.explore_mergeWith();
+        Flux<String>  value = fluxAndMonoGeneratorService.explore_mergeWith();
 
         //then
         StepVerifier.create(value)
